@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Bookey</string>
+    <string name="error_empty_fields">Compila tutti i campi.</string>
+    <string name="edit_personal_book">Modifica libro personale</string>
+    <string name="save">Salva</string>
+    <string name="rating_template">Valutazione: %1$d/5</string>
+    <string name="no_review">Nessuna recensione</string>
+    <string name="location_permission_denied">Permesso posizione negato: impossibile mostrare lettori vicini.</string>
+    <string name="location_unavailable">Posizione non disponibile al momento.</string>
+    <string name="you_are_here">Sei qui</string>
+    <string name="google_maps_key">YOUR_GOOGLE_MAPS_KEY</string>
 </resources>
