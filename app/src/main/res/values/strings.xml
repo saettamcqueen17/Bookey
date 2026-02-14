@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Bookey</string>
+    <string name="book_publisher">Casa editrice: %1$s</string>
+    <string name="book_genre">Genere: %1$s</string>
+    <string name="book_price">Prezzo: €%1$s</string>
+    <string name="book_availability">Disponibilità: %1$d</string>
+    <string name="book_added_to_personal_catalog">"%1$s" aggiunto al Catalogo Personale</string>
+
+    <string name="auth_fill_all_fields">Compila tutti i campi per registrarti.</string>
+    <string name="auth_fill_email_password">Inserisci email e password.</string>
+    <string name="auth_user_exists">Utente già registrato: %1$s</string>
+    <string name="auth_register_success">Registrazione completata. Benvenuto %1$s!</string>
+    <string name="auth_login_failed">Login non riuscito: credenziali non valide.</string>
+    <string name="auth_login_success">Login effettuato. Ciao %1$s!</string>
+
+    <string name="location_permission_denied">Permesso posizione negato: impossibile ottenere la posizione.</string>
+    <string name="location_not_available">Posizione non disponibile, prova in un'area con GPS/rete attivi.</string>
+    <string name="location_error">Errore recupero posizione: %1$s</string>
+    <string name="location_coordinates">Lat: %.6f, Lng: %.6f</string>
 </resources>
