@@ -26,7 +26,6 @@ import com.example.bookey.ui.BookAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,18 +42,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView authSubtitleText;
     private TextView menuWelcomeText;
     private TextView locationText;
-    private TextInputLayout nameInputLayout;
     private EditText emailEditText;
     private EditText passwordEditText;
-    private EditText nameEditText;
-    private Button authSubmitButton;
-    private Button authModeSwitchButton;
+    private Button loginButton;
+    private Button registerButton;
     private View menuContainer;
     private View generalCatalogSection;
     private View personalCatalogSection;
     private View locationSection;
     private FusedLocationProviderClient fusedLocationClient;
-    private boolean isLoginMode = true;
 
     private final ActivityResultLauncher<String> locationPermissionRequest =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -84,57 +80,36 @@ public class MainActivity extends AppCompatActivity {
     private void setupAuthenticationSection() {
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-        nameEditText = findViewById(R.id.nameEditText);
-        nameInputLayout = findViewById(R.id.nameInputLayout);
-        authSubmitButton = findViewById(R.id.authSubmitButton);
-        authModeSwitchButton = findViewById(R.id.authModeSwitchButton);
+        loginButton = findViewById(R.id.loginButton);
+        registerButton = findViewById(R.id.registerButton);
         authTitleText = findViewById(R.id.authTitleTextView);
         authSubtitleText = findViewById(R.id.authSubtitleTextView);
         authStatusText = findViewById(R.id.authStatusTextView);
 
-        authSubmitButton.setOnClickListener(v -> {
-            if (isLoginMode) {
-                loginUser();
-            } else {
-                registerUser();
-            }
-        });
+        authTitleText.setText(R.string.auth_login_title);
+        authSubtitleText.setText(R.string.auth_login_subtitle);
 
-        authModeSwitchButton.setOnClickListener(v -> {
-            isLoginMode = !isLoginMode;
-            applyAuthModeUi();
-        });
-
-        applyAuthModeUi();
-    }
-
-    private void applyAuthModeUi() {
-        if (isLoginMode) {
-            authTitleText.setText(R.string.auth_login_title);
-            authSubtitleText.setText(R.string.auth_login_subtitle);
-            authSubmitButton.setText(R.string.auth_login_action);
-            authModeSwitchButton.setText(R.string.auth_switch_to_register);
-            nameInputLayout.setVisibility(View.GONE);
-        } else {
-            authTitleText.setText(R.string.auth_register_title);
-            authSubtitleText.setText(R.string.auth_register_subtitle);
-            authSubmitButton.setText(R.string.auth_register_action);
-            authModeSwitchButton.setText(R.string.auth_switch_to_login);
-            nameInputLayout.setVisibility(View.VISIBLE);
-        }
+        loginButton.setOnClickListener(v -> loginUser());
+        registerButton.setOnClickListener(v -> registerUser());
     }
 
     private void registerUser() {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
-        String displayName = nameEditText.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty() || displayName.isEmpty()) {
-            Toast.makeText(this, R.string.auth_fill_all_fields, Toast.LENGTH_SHORT).show();
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, R.string.auth_fill_email_password, Toast.LENGTH_SHORT).show();
             return;
         }
 
         dbExecutor.execute(() -> {
+            User existingUser = appDatabase.userDao().getUserByEmail(email);
+            if (existingUser != null) {
+                runOnUiThread(() -> authStatusText.setText(getString(R.string.auth_user_exists, email)));
+                return;
+            }
+
+            String displayName = email.contains("@") ? email.substring(0, email.indexOf('@')) : email;
             long result = appDatabase.userDao().register(new User(email, password, displayName));
             runOnUiThread(() -> {
                 if (result == -1) {
