@@ -23,16 +23,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     private final List<Book> books;
     private final OnAddBookClick onAddBookClick;
-    private final boolean showAddButton;
 
     public BookAdapter(List<Book> books, OnAddBookClick onAddBookClick) {
-        this(books, onAddBookClick, true);
-    }
-
-    public BookAdapter(List<Book> books, OnAddBookClick onAddBookClick, boolean showAddButton) {
         this.books = books;
         this.onAddBookClick = onAddBookClick;
-        this.showAddButton = showAddButton;
     }
 
     @NonNull
@@ -52,14 +46,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.price.setText(holder.itemView.getContext().getString(R.string.book_price, String.format(Locale.ITALY, "%.2f", book.price)));
         holder.availability.setText(holder.itemView.getContext().getString(R.string.book_availability, book.availability));
         holder.cover.setImageResource(R.drawable.catalog_book_cover_placeholder);
-
-        if (showAddButton) {
-            holder.addButton.setVisibility(View.VISIBLE);
-            holder.addButton.setOnClickListener(v -> onAddBookClick.onAdd(book));
-        } else {
-            holder.addButton.setVisibility(View.GONE);
-            holder.addButton.setOnClickListener(null);
-        }
+        holder.addButton.setOnClickListener(v -> onAddBookClick.onAdd(book));
     }
 
     @Override

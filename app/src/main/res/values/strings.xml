@@ -35,7 +35,7 @@
     <string name="location_request_action">Ottieni posizione dispositivo</string>
     <string name="location_default_message">Premi il pulsante per ottenere la posizione</string>
     <string name="location_permission_denied">Permesso posizione negato: impossibile ottenere la posizione.</string>
-    <string name="location_not_available">Posizione non disponibile, prova in un'area con GPS/rete attivi.</string>
+    <string name="location_not_available">Posizione non disponibile,riprova.</string>
     <string name="location_error">Errore recupero posizione: %1$s</string>
     <string name="location_coordinates">Lat: %.6f, Lng: %.6f</string>
 </resources>
