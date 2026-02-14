@@ -27,6 +27,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -202,8 +203,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupCatalogSection() {
-        RecyclerView recyclerView = findViewById(R.id.generalCatalogRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView generalCatalogRecyclerView = findViewById(R.id.generalCatalogRecyclerView);
+        generalCatalogRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        RecyclerView personalCatalogRecyclerView = findViewById(R.id.personalCatalogRecyclerView);
+        personalCatalogRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        personalCatalogStatusText = findViewById(R.id.personalCatalogStatusTextView);
 
         List<Book> books = Arrays.asList(
                 new Book("Godel, Escher, Bach", "Douglas Hofstadter", "Adelphi", "ROMANZO_POLITICO", 23.00, 6),
@@ -211,12 +217,45 @@ public class MainActivity extends AppCompatActivity {
                 new Book("Norwegian Wood", "Haruki Murakami", "Einaudi", "NARRATIVA", 14.90, 9)
         );
 
-        BookAdapter adapter = new BookAdapter(books,
-                book -> Toast.makeText(this,
-                        getString(R.string.book_added_to_personal_catalog, book.title),
-                        Toast.LENGTH_SHORT).show());
+        BookAdapter generalCatalogAdapter = new BookAdapter(books,
+                book -> {
+                    if (isAlreadyInPersonalCatalog(book)) {
+                        Toast.makeText(this, R.string.personal_catalog_duplicate, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        recyclerView.setAdapter(adapter);
+                    personalCatalogBooks.add(book);
+                    personalCatalogAdapter.notifyItemInserted(personalCatalogBooks.size() - 1);
+                    updatePersonalCatalogStatus();
+
+                    Toast.makeText(this,
+                            getString(R.string.book_added_to_personal_catalog, book.title),
+                            Toast.LENGTH_SHORT).show();
+                });
+
+        personalCatalogAdapter = new BookAdapter(personalCatalogBooks, book -> {
+        }, false);
+
+        generalCatalogRecyclerView.setAdapter(generalCatalogAdapter);
+        personalCatalogRecyclerView.setAdapter(personalCatalogAdapter);
+        updatePersonalCatalogStatus();
+    }
+
+    private boolean isAlreadyInPersonalCatalog(Book candidate) {
+        for (Book book : personalCatalogBooks) {
+            if (book.title.equals(candidate.title) && book.author.equals(candidate.author)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void updatePersonalCatalogStatus() {
+        if (personalCatalogBooks.isEmpty()) {
+            personalCatalogStatusText.setText(R.string.personal_catalog_empty);
+        } else {
+            personalCatalogStatusText.setText(getString(R.string.personal_catalog_count, personalCatalogBooks.size()));
+        }
     }
 
     private void setupLocationSection() {
