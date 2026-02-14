@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,7 +25,9 @@ import com.example.bookey.ui.BookAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -36,8 +39,27 @@ public class MainActivity extends AppCompatActivity {
     private AppDatabase appDatabase;
     private ExecutorService dbExecutor;
     private TextView authStatusText;
+    private TextView authTitleText;
+    private TextView authSubtitleText;
+    private TextView menuWelcomeText;
     private TextView locationText;
+    private TextView personalCatalogStatusText;
+    private TextInputLayout nameInputLayout;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private EditText nameEditText;
+    private Button authSubmitButton;
+    private Button loginModeButton;
+    private Button registerModeButton;
+    private View menuContainer;
+    private View generalCatalogSection;
+    private View personalCatalogSection;
+    private View locationSection;
     private FusedLocationProviderClient fusedLocationClient;
+    private boolean isLoginMode = true;
+
+    private final List<Book> personalCatalogBooks = new ArrayList<>();
+    private BookAdapter personalCatalogAdapter;
 
     private final ActivityResultLauncher<String> locationPermissionRequest =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -61,63 +83,146 @@ public class MainActivity extends AppCompatActivity {
         setupAuthenticationSection();
         setupCatalogSection();
         setupLocationSection();
+        setupMenuSection();
     }
 
     private void setupAuthenticationSection() {
-        EditText emailEditText = findViewById(R.id.emailEditText);
-        EditText passwordEditText = findViewById(R.id.passwordEditText);
-        EditText nameEditText = findViewById(R.id.nameEditText);
-        Button registerButton = findViewById(R.id.registerButton);
-        Button loginButton = findViewById(R.id.loginButton);
+        emailEditText = findViewById(R.id.emailEditText);
+        passwordEditText = findViewById(R.id.passwordEditText);
+        nameEditText = findViewById(R.id.nameEditText);
+        nameInputLayout = findViewById(R.id.nameInputLayout);
+        authSubmitButton = findViewById(R.id.authSubmitButton);
+        loginModeButton = findViewById(R.id.loginModeButton);
+        registerModeButton = findViewById(R.id.registerModeButton);
+        authTitleText = findViewById(R.id.authTitleTextView);
+        authSubtitleText = findViewById(R.id.authSubtitleTextView);
         authStatusText = findViewById(R.id.authStatusTextView);
 
-        registerButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString().trim();
-            String displayName = nameEditText.getText().toString().trim();
-
-            if (email.isEmpty() || password.isEmpty() || displayName.isEmpty()) {
-                Toast.makeText(this, R.string.auth_fill_all_fields, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            dbExecutor.execute(() -> {
-                long result = appDatabase.userDao().register(new User(email, password, displayName));
-                runOnUiThread(() -> {
-                    if (result == -1) {
-                        authStatusText.setText(getString(R.string.auth_user_exists, email));
-                    } else {
-                        authStatusText.setText(getString(R.string.auth_register_success, displayName));
-                    }
-                });
-            });
+        loginModeButton.setOnClickListener(v -> {
+            isLoginMode = true;
+            applyAuthModeUi();
         });
 
-        loginButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString().trim();
+        registerModeButton.setOnClickListener(v -> {
+            isLoginMode = false;
+            applyAuthModeUi();
+        });
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, R.string.auth_fill_email_password, Toast.LENGTH_SHORT).show();
-                return;
+        authSubmitButton.setOnClickListener(v -> {
+            if (isLoginMode) {
+                loginUser();
+            } else {
+                registerUser();
             }
+        });
 
-            dbExecutor.execute(() -> {
-                User user = appDatabase.userDao().login(email, password);
-                runOnUiThread(() -> {
-                    if (user == null) {
-                        authStatusText.setText(R.string.auth_login_failed);
-                    } else {
-                        authStatusText.setText(getString(R.string.auth_login_success, user.displayName));
-                    }
-                });
+        applyAuthModeUi();
+    }
+
+    private void applyAuthModeUi() {
+        if (isLoginMode) {
+            authTitleText.setText(R.string.auth_login_title);
+            authSubtitleText.setText(R.string.auth_login_subtitle);
+            authSubmitButton.setText(R.string.auth_login_action);
+            nameInputLayout.setVisibility(View.GONE);
+            loginModeButton.setEnabled(false);
+            registerModeButton.setEnabled(true);
+        } else {
+            authTitleText.setText(R.string.auth_register_title);
+            authSubtitleText.setText(R.string.auth_register_subtitle);
+            authSubmitButton.setText(R.string.auth_register_action);
+            nameInputLayout.setVisibility(View.VISIBLE);
+            loginModeButton.setEnabled(true);
+            registerModeButton.setEnabled(false);
+        }
+    }
+
+    private void registerUser() {
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+        String displayName = nameEditText.getText().toString().trim();
+
+        if (email.isEmpty() || password.isEmpty() || displayName.isEmpty()) {
+            Toast.makeText(this, R.string.auth_fill_all_fields, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        dbExecutor.execute(() -> {
+            long result = appDatabase.userDao().register(new User(email, password, displayName));
+            runOnUiThread(() -> {
+                if (result == -1) {
+                    authStatusText.setText(getString(R.string.auth_user_exists, email));
+                } else {
+                    onAuthenticationSuccess(displayName, true);
+                }
             });
         });
     }
 
+    private void loginUser() {
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, R.string.auth_fill_email_password, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        dbExecutor.execute(() -> {
+            User user = appDatabase.userDao().login(email, password);
+            runOnUiThread(() -> {
+                if (user == null) {
+                    authStatusText.setText(R.string.auth_login_failed);
+                } else {
+                    onAuthenticationSuccess(user.displayName, false);
+                }
+            });
+        });
+    }
+
+    private void onAuthenticationSuccess(String displayName, boolean fromRegistration) {
+        if (fromRegistration) {
+            authStatusText.setText(getString(R.string.auth_register_success, displayName));
+        } else {
+            authStatusText.setText(getString(R.string.auth_login_success, displayName));
+        }
+
+        findViewById(R.id.authContainer).setVisibility(View.GONE);
+        menuContainer.setVisibility(View.VISIBLE);
+        menuWelcomeText.setText(getString(R.string.menu_welcome_message, displayName));
+        showOnlySection(null);
+    }
+
+    private void setupMenuSection() {
+        menuContainer = findViewById(R.id.menuContainer);
+        menuWelcomeText = findViewById(R.id.menuWelcomeTextView);
+        generalCatalogSection = findViewById(R.id.generalCatalogSection);
+        personalCatalogSection = findViewById(R.id.personalCatalogSection);
+        locationSection = findViewById(R.id.locationSection);
+
+        Button openGeneralCatalogButton = findViewById(R.id.openGeneralCatalogButton);
+        Button openPersonalCatalogButton = findViewById(R.id.openPersonalCatalogButton);
+        Button openMapButton = findViewById(R.id.openMapButton);
+
+        openGeneralCatalogButton.setOnClickListener(v -> showOnlySection(generalCatalogSection));
+        openPersonalCatalogButton.setOnClickListener(v -> showOnlySection(personalCatalogSection));
+        openMapButton.setOnClickListener(v -> showOnlySection(locationSection));
+    }
+
+    private void showOnlySection(View sectionToShow) {
+        generalCatalogSection.setVisibility(sectionToShow == generalCatalogSection ? View.VISIBLE : View.GONE);
+        personalCatalogSection.setVisibility(sectionToShow == personalCatalogSection ? View.VISIBLE : View.GONE);
+        locationSection.setVisibility(sectionToShow == locationSection ? View.VISIBLE : View.GONE);
+    }
+
     private void setupCatalogSection() {
-        RecyclerView recyclerView = findViewById(R.id.generalCatalogRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView generalCatalogRecyclerView = findViewById(R.id.generalCatalogRecyclerView);
+        generalCatalogRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        RecyclerView personalCatalogRecyclerView = findViewById(R.id.personalCatalogRecyclerView);
+        personalCatalogRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        personalCatalogStatusText = findViewById(R.id.personalCatalogStatusTextView);
 
         List<Book> books = Arrays.asList(
                 new Book("Godel, Escher, Bach", "Douglas Hofstadter", "Adelphi", "ROMANZO_POLITICO", 23.00, 6),
@@ -125,12 +230,45 @@ public class MainActivity extends AppCompatActivity {
                 new Book("Norwegian Wood", "Haruki Murakami", "Einaudi", "NARRATIVA", 14.90, 9)
         );
 
-        BookAdapter adapter = new BookAdapter(books,
-                book -> Toast.makeText(this,
-                        getString(R.string.book_added_to_personal_catalog, book.title),
-                        Toast.LENGTH_SHORT).show());
+        BookAdapter generalCatalogAdapter = new BookAdapter(books,
+                book -> {
+                    if (isAlreadyInPersonalCatalog(book)) {
+                        Toast.makeText(this, R.string.personal_catalog_duplicate, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        recyclerView.setAdapter(adapter);
+                    personalCatalogBooks.add(book);
+                    personalCatalogAdapter.notifyItemInserted(personalCatalogBooks.size() - 1);
+                    updatePersonalCatalogStatus();
+
+                    Toast.makeText(this,
+                            getString(R.string.book_added_to_personal_catalog, book.title),
+                            Toast.LENGTH_SHORT).show();
+                });
+
+        personalCatalogAdapter = new BookAdapter(personalCatalogBooks, book -> {
+        }, false);
+
+        generalCatalogRecyclerView.setAdapter(generalCatalogAdapter);
+        personalCatalogRecyclerView.setAdapter(personalCatalogAdapter);
+        updatePersonalCatalogStatus();
+    }
+
+    private boolean isAlreadyInPersonalCatalog(Book candidate) {
+        for (Book book : personalCatalogBooks) {
+            if (book.title.equals(candidate.title) && book.author.equals(candidate.author)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void updatePersonalCatalogStatus() {
+        if (personalCatalogBooks.isEmpty()) {
+            personalCatalogStatusText.setText(R.string.personal_catalog_empty);
+        } else {
+            personalCatalogStatusText.setText(getString(R.string.personal_catalog_count, personalCatalogBooks.size()));
+        }
     }
 
     private void setupLocationSection() {
