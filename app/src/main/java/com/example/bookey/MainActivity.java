@@ -43,23 +43,18 @@ public class MainActivity extends AppCompatActivity {
     private TextView authSubtitleText;
     private TextView menuWelcomeText;
     private TextView locationText;
-    private TextView personalCatalogStatusText;
     private TextInputLayout nameInputLayout;
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText nameEditText;
     private Button authSubmitButton;
-    private Button loginModeButton;
-    private Button registerModeButton;
+    private Button authModeSwitchButton;
     private View menuContainer;
     private View generalCatalogSection;
     private View personalCatalogSection;
     private View locationSection;
     private FusedLocationProviderClient fusedLocationClient;
     private boolean isLoginMode = true;
-
-    private final List<Book> personalCatalogBooks = new ArrayList<>();
-    private BookAdapter personalCatalogAdapter;
 
     private final ActivityResultLauncher<String> locationPermissionRequest =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -92,21 +87,10 @@ public class MainActivity extends AppCompatActivity {
         nameEditText = findViewById(R.id.nameEditText);
         nameInputLayout = findViewById(R.id.nameInputLayout);
         authSubmitButton = findViewById(R.id.authSubmitButton);
-        loginModeButton = findViewById(R.id.loginModeButton);
-        registerModeButton = findViewById(R.id.registerModeButton);
+        authModeSwitchButton = findViewById(R.id.authModeSwitchButton);
         authTitleText = findViewById(R.id.authTitleTextView);
         authSubtitleText = findViewById(R.id.authSubtitleTextView);
         authStatusText = findViewById(R.id.authStatusTextView);
-
-        loginModeButton.setOnClickListener(v -> {
-            isLoginMode = true;
-            applyAuthModeUi();
-        });
-
-        registerModeButton.setOnClickListener(v -> {
-            isLoginMode = false;
-            applyAuthModeUi();
-        });
 
         authSubmitButton.setOnClickListener(v -> {
             if (isLoginMode) {
@@ -114,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 registerUser();
             }
+        });
+
+        authModeSwitchButton.setOnClickListener(v -> {
+            isLoginMode = !isLoginMode;
+            applyAuthModeUi();
         });
 
         applyAuthModeUi();
@@ -124,16 +113,14 @@ public class MainActivity extends AppCompatActivity {
             authTitleText.setText(R.string.auth_login_title);
             authSubtitleText.setText(R.string.auth_login_subtitle);
             authSubmitButton.setText(R.string.auth_login_action);
+            authModeSwitchButton.setText(R.string.auth_switch_to_register);
             nameInputLayout.setVisibility(View.GONE);
-            loginModeButton.setEnabled(false);
-            registerModeButton.setEnabled(true);
         } else {
             authTitleText.setText(R.string.auth_register_title);
             authSubtitleText.setText(R.string.auth_register_subtitle);
             authSubmitButton.setText(R.string.auth_register_action);
+            authModeSwitchButton.setText(R.string.auth_switch_to_login);
             nameInputLayout.setVisibility(View.VISIBLE);
-            loginModeButton.setEnabled(true);
-            registerModeButton.setEnabled(false);
         }
     }
 
