@@ -6,6 +6,18 @@
     <string name="book_availability">Disponibilità: %1$d</string>
     <string name="book_added_to_personal_catalog">"%1$s" aggiunto al Catalogo Personale</string>
 
+    <string name="auth_name_hint">Nome utente</string>
+    <string name="auth_email_hint">Email</string>
+    <string name="auth_password_hint">Password</string>
+    <string name="auth_login_title">Login</string>
+    <string name="auth_login_subtitle">Inserisci email e password per accedere.</string>
+    <string name="auth_register_title">Registrazione</string>
+    <string name="auth_register_subtitle">Crea un account con nome, email e password.</string>
+    <string name="auth_login_action">Accedi</string>
+    <string name="auth_register_action">Registrati</string>
+    <string name="auth_switch_to_register">Non hai un account? Registrati</string>
+    <string name="auth_switch_to_login">Hai già un account? Login</string>
+
     <string name="auth_fill_all_fields">Compila tutti i campi per registrarti.</string>
     <string name="auth_fill_email_password">Inserisci email e password.</string>
     <string name="auth_user_exists">Utente già registrato: %1$s</string>
@@ -13,6 +25,15 @@
     <string name="auth_login_failed">Login non riuscito: credenziali non valide.</string>
     <string name="auth_login_success">Login effettuato. Ciao %1$s!</string>
 
+    <string name="menu_welcome_message">Ciao %1$s!</string>
+    <string name="menu_choose_section">Scegli cosa vuoi aprire:</string>
+    <string name="menu_general_catalog">Catalogo Generale</string>
+    <string name="menu_personal_catalog">Catalogo Personale</string>
+    <string name="menu_map">Mappa</string>
+    <string name="personal_catalog_empty">Il tuo catalogo personale è vuoto per ora.</string>
+
+    <string name="location_request_action">Ottieni posizione dispositivo</string>
+    <string name="location_default_message">Premi il pulsante per ottenere la posizione</string>
     <string name="location_permission_denied">Permesso posizione negato: impossibile ottenere la posizione.</string>
     <string name="location_not_available">Posizione non disponibile, prova in un'area con GPS/rete attivi.</string>
     <string name="location_error">Errore recupero posizione: %1$s</string>
