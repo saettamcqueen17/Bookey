@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Button openGeneralCatalogButton;
     private Button openPersonalCatalogButton;
     private Button openMapButton;
+    private String authenticatedUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 if (result == -1) {
                     authStatusText.setText(getString(R.string.auth_user_exists, email));
                 } else {
-                    onAuthenticationSuccess(displayName, true);
-                }
+                    onAuthenticationSuccess(userId, displayName, true);                }
             });
         });
     }
@@ -127,34 +127,42 @@ public class MainActivity extends AppCompatActivity {
                 if (user == null) {
                     authStatusText.setText(R.string.auth_login_failed);
                 } else {
-                    onAuthenticationSuccess(user.displayName, false);
+                    onAuthenticationSuccess(user.userId, user.displayName, false);
                 }
             });
         });
     }
 
-    private void onAuthenticationSuccess(String displayName, boolean fromRegistration) {
-        if (fromRegistration) {
-            authStatusText.setText(getString(R.string.auth_register_success, displayName));
-        } else {
-            authStatusText.setText(getString(R.string.auth_login_success, displayName));
+    private void onAuthenticationSuccess(String userId, String displayName, boolean fromRegistration) {
+        authenticatedUserId = userId;
+        {
+            if (fromRegistration) {
+                authStatusText.setText(getString(R.string.auth_register_success, displayName));
+            } else {
+                authStatusText.setText(getString(R.string.auth_login_success, displayName));
+            }
+
+            findViewById(R.id.authContainer).setVisibility(android.view.View.GONE);
+            findViewById(R.id.menuContainer).setVisibility(android.view.View.VISIBLE);
+            menuWelcomeText.setText(getString(R.string.menu_welcome_message, displayName));
         }
-
-        findViewById(R.id.authContainer).setVisibility(android.view.View.GONE);
-        findViewById(R.id.menuContainer).setVisibility(android.view.View.VISIBLE);
-        menuWelcomeText.setText(getString(R.string.menu_welcome_message, displayName));
     }
-
     private void setupMenuSection() {
         menuWelcomeText = findViewById(R.id.menuWelcomeTextView);
         openGeneralCatalogButton = findViewById(R.id.openGeneralCatalogButton);
         openPersonalCatalogButton = findViewById(R.id.openPersonalCatalogButton);
         openMapButton = findViewById(R.id.openMapButton);
 
-        openGeneralCatalogButton.setOnClickListener(v ->
-                startActivity(new Intent(this, GeneralCatalogActivity.class)));
-        openPersonalCatalogButton.setOnClickListener(v ->
-                startActivity(new Intent(this, PersonalCatalogActivity.class)));
+        openGeneralCatalogButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, GeneralCatalogActivity.class);
+            intent.putExtra(GeneralCatalogActivity.EXTRA_USER_ID, authenticatedUserId);
+            startActivity(intent);
+        });
+        openPersonalCatalogButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PersonalCatalogActivity.class);
+            intent.putExtra(GeneralCatalogActivity.EXTRA_USER_ID, authenticatedUserId);
+            startActivity(intent);
+        });
         openMapButton.setOnClickListener(v ->
                 startActivity(new Intent(this, MapActivity.class)));
     }
@@ -165,3 +173,6 @@ public class MainActivity extends AppCompatActivity {
         dbExecutor.shutdown();
     }
 }
+
+
+

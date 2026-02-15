@@ -6,6 +6,9 @@
     <string name="book_availability">Disponibilità: %1$d</string>
     <string name="book_added_to_personal_catalog">"%1$s" aggiunto al Catalogo Personale</string>
 
+    <string name="book_already_in_personal_catalog">Il libro è già nel tuo catalogo personale.</string>
+
+
     <string name="welcome_logo_content_description">Logo Bookey</string>
     <string name="welcome_enter_action">Entra</string>
 
@@ -30,6 +33,10 @@
     <string name="auth_register_success">Registrazione completata. Benvenuto %1$s!</string>
     <string name="auth_login_failed">Login non riuscito: credenziali non valide.</string>
     <string name="auth_login_success">Login effettuato. Ciao %1$s!</string>
+
+    <string name="personal_catalog_title_list_header">I tuoi libri:</string>
+    <string name="personal_catalog_user_required">Effettua il login per vedere o modificare il catalogo personale.</string>
+
 
     <string name="menu_welcome_message">Ciao %1$s!</string>
     <string name="menu_choose_section">Scegli cosa vuoi aprire:</string>
