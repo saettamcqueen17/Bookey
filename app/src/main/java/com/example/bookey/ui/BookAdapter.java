@@ -43,8 +43,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.author.setText(book.author);
         holder.publisher.setText(holder.itemView.getContext().getString(R.string.book_publisher, book.publisher));
         holder.genre.setText(holder.itemView.getContext().getString(R.string.book_genre, book.genre));
-        holder.price.setText(holder.itemView.getContext().getString(R.string.book_price, String.format(Locale.ITALY, "%.2f", book.price)));
-        holder.availability.setText(holder.itemView.getContext().getString(R.string.book_availability, book.availability));
+
         holder.cover.setImageResource(R.drawable.catalog_book_cover_placeholder);
         holder.addButton.setOnClickListener(v -> onAddBookClick.onAdd(book));
     }
@@ -60,8 +59,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         final TextView author;
         final TextView publisher;
         final TextView genre;
-        final TextView price;
-        final TextView availability;
+
         final Button addButton;
 
         BookViewHolder(@NonNull View itemView) {
@@ -71,8 +69,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             author = itemView.findViewById(R.id.authorTextView);
             publisher = itemView.findViewById(R.id.publisherTextView);
             genre = itemView.findViewById(R.id.genreTextView);
-            price = itemView.findViewById(R.id.priceTextView);
-            availability = itemView.findViewById(R.id.availabilityTextView);
+
             addButton = itemView.findViewById(R.id.addToPersonalCatalogButton);
         }
     }
