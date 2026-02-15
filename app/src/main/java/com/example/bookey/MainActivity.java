@@ -26,6 +26,7 @@ import com.example.bookey.ui.BookAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,25 +42,19 @@ public class MainActivity extends AppCompatActivity {
     private TextView authTitleText;
     private TextView authSubtitleText;
     private TextView menuWelcomeText;
-    private TextView locationText;
+
+    private TextInputLayout userIdInputLayout;
+    private EditText userIdEditText;
     private EditText emailEditText;
     private EditText passwordEditText;
+
+
+
     private Button loginButton;
     private Button registerButton;
-    private View menuContainer;
-    private View generalCatalogSection;
-    private View personalCatalogSection;
-    private View locationSection;
-    private FusedLocationProviderClient fusedLocationClient;
-
-    private final ActivityResultLauncher<String> locationPermissionRequest =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    fetchDeviceLocation();
-                } else {
-                    locationText.setText(R.string.location_permission_denied);
-                }
-            });
+    private Button openGeneralCatalogButton;
+    private Button openPersonalCatalogButton;
+    private Button openMapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,17 +64,19 @@ public class MainActivity extends AppCompatActivity {
 
         appDatabase = AppDatabase.getInstance(this);
         dbExecutor = Executors.newSingleThreadExecutor();
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         setupAuthenticationSection();
-        setupCatalogSection();
-        setupLocationSection();
+
         setupMenuSection();
     }
 
     private void setupAuthenticationSection() {
+        userIdInputLayout = findViewById(R.id.userIdInputLayout);
+        userIdEditText = findViewById(R.id.userIdEditText);
+
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
+
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
         authTitleText = findViewById(R.id.authTitleTextView);
