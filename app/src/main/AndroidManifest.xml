@@ -17,9 +17,9 @@
         <activity android:name=".MapActivity" />
         <activity android:name=".PersonalCatalogActivity" />
         <activity android:name=".GeneralCatalogActivity" />
+        <activity android:name=".MainActivity" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".WelcomeActivity"            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -6,6 +6,9 @@
     <string name="book_availability">Disponibilità: %1$d</string>
     <string name="book_added_to_personal_catalog">"%1$s" aggiunto al Catalogo Personale</string>
 
+    <string name="welcome_logo_content_description">Logo Bookey</string>
+    <string name="welcome_enter_action">Entra</string>
+
     <string name="auth_name_hint">Nome utente</string>
     <string name="auth_user_id_hint">UtenteId (solo registrazione)</string>
     <string name="auth_email_hint">Email</string>

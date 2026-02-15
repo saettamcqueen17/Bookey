@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <ImageView
+        android:id="@+id/appLogoImageView"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/welcome_logo_content_description"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/ic_launcher" />
+
+    <Button
+        android:id="@+id/enterButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/welcome_enter_action" />
+
+</LinearLayout>
