@@ -7,6 +7,7 @@
     <string name="book_added_to_personal_catalog">"%1$s" aggiunto al Catalogo Personale</string>
 
     <string name="auth_name_hint">Nome utente</string>
+    <string name="auth_user_id_hint">UtenteId (solo registrazione)</string>
     <string name="auth_email_hint">Email</string>
     <string name="auth_password_hint">Password</string>
     <string name="auth_login_title">Login</string>
@@ -18,9 +19,11 @@
     <string name="auth_switch_to_register">Non hai un account? Registrati</string>
     <string name="auth_switch_to_login">Hai già un account? Login</string>
 
-    <string name="auth_fill_all_fields">Compila tutti i campi per registrarti.</string>
     <string name="auth_fill_email_password">Inserisci email e password.</string>
+    <string name="auth_fill_registration_fields">Per registrarti inserisci UtenteId, email e password.</string>
+    <string name="auth_register_user_id_prompt">Per registrarti inserisci anche UtenteId.</string>
     <string name="auth_user_exists">Utente già registrato: %1$s</string>
+    <string name="auth_user_id_exists">UtenteId già registrato: %1$s</string>
     <string name="auth_register_success">Registrazione completata. Benvenuto %1$s!</string>
     <string name="auth_login_failed">Login non riuscito: credenziali non valide.</string>
     <string name="auth_login_success">Login effettuato. Ciao %1$s!</string>
