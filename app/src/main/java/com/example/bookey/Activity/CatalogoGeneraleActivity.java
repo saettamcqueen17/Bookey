@@ -69,9 +69,9 @@ public class CatalogoGeneraleActivity extends AppCompatActivity {
         }
 
         List<LibroEntity> initialBooks = Arrays.asList(
-                new LibroEntity("10000001", "Godel, Escher, Bach", "Douglas Hofstadter", "Adelphi", "ROMANZO_POLITICO"),
-                new LibroEntity("10000002", "Il Nome della Rosa", "Umberto Eco", "Bompiani", "GIALLO"),
-                new LibroEntity("10000003", "Norwegian Wood", "Haruki Murakami", "Einaudi", "NARRATIVA")
+                new LibroEntity("10000001", "Godel, Escher, Bach", "Douglas Hofstadter", "Adelphi", "ROMANZO_POLITICO","https://m.media-amazon.com/images/I/51zU0Zk9zLL._SL1000_.jpg" ),
+                new LibroEntity("10000002", "Il Nome della Rosa", "Umberto Eco", "Bompiani", "GIALLO","https://m.media-amazon.com/images/I/71o85G2CkyL._SL1498_.jpg" ),
+                new LibroEntity("10000003", "Norwegian Wood", "Haruki Murakami", "Einaudi", "NARRATIVA","https://www.ibs.it/images/9788806216467_0_0_536_0_75.jpg" )
         );
 
         appDatabase.bookDao().insertGeneralCatalogBooks(initialBooks);
@@ -80,7 +80,7 @@ public class CatalogoGeneraleActivity extends AppCompatActivity {
     private List<LibroUI> mapToUiBooks(List<LibroEntity> entities) {
         List<LibroUI> libroUIS = new ArrayList<>();
         for (LibroEntity entity : entities) {
-            libroUIS.add(new LibroUI(entity.isbn, entity.titolo, entity.autore, entity.editore, entity.genere));
+            libroUIS.add(new LibroUI(entity.isbn, entity.titolo, entity.autore, entity.editore, entity.genere, entity.coverUrl));
         }
         return libroUIS;
     }

@@ -16,13 +16,15 @@ public class LibroEntity {
     public String editore;
     public String genere;
 
+    public String coverUrl;
 
-    public LibroEntity(@NonNull String isbn, String titolo, String autore, String editore, String genere) {
+
+    public LibroEntity(@NonNull String isbn, String titolo, String autore, String editore, String genere,String coverUrl) {
         this.isbn = isbn;
         this.titolo = titolo;
         this.autore = autore;
         this.editore = editore;
         this.genere = genere;
-
+        this.coverUrl= coverUrl;
     }
 }
