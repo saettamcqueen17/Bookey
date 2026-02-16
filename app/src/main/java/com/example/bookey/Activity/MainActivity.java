@@ -2,6 +2,7 @@ package com.example.bookey.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,6 +20,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     private AppDatabase appDatabase;
     private ExecutorService dbExecutor;
@@ -89,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        dbExecutor.execute(() -> {
+        safeRunDbTask(() -> {
             User existingUserByEmail = appDatabase.userDao().getUserByEmail(email);
             if (existingUserByEmail != null) {
                 runOnUiThread(() -> authStatusText.setText(getString(R.string.auth_user_exists, email)));
@@ -108,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
                 if (result == -1) {
                     authStatusText.setText(getString(R.string.auth_user_exists, email));
                 } else {
-                    onAuthenticationSuccess(userId, displayName, true);                }
+                    onAuthenticationSuccess(userId, displayName, true);
+                }
             });
         });
     }
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        dbExecutor.execute(() -> {
+        safeRunDbTask(() -> {
             User user = appDatabase.userDao().login(email, password);
             runOnUiThread(() -> {
                 if (user == null) {
@@ -131,6 +135,20 @@ public class MainActivity extends AppCompatActivity {
                     onAuthenticationSuccess(user.userId, user.displayName, false);
                 }
             });
+        });
+    }
+
+    private void safeRunDbTask(Runnable task) {
+        dbExecutor.execute(() -> {
+            try {
+                task.run();
+            } catch (Exception exception) {
+                Log.e(TAG, "Errore durante l'operazione sul database", exception);
+                runOnUiThread(() -> {
+                    authStatusText.setText(R.string.auth_generic_error);
+                    Toast.makeText(this, R.string.auth_generic_error, Toast.LENGTH_LONG).show();
+                });
+            }
         });
     }
 
@@ -174,6 +192,5 @@ public class MainActivity extends AppCompatActivity {
         dbExecutor.shutdown();
     }
 }
-
 
 

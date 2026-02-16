@@ -33,6 +33,7 @@
     <string name="auth_register_success">Registrazione completata. Benvenuto %1$s!</string>
     <string name="auth_login_failed">Login non riuscito: credenziali non valide.</string>
     <string name="auth_login_success">Login effettuato. Ciao %1$s!</string>
+    <string name="auth_generic_error">Si è verificato un errore interno. Riprova.</string>
 
     <string name="personal_catalog_title_list_header">I tuoi libri:</string>
     <string name="personal_catalog_user_required">Effettua il login per vedere o modificare il catalogo personale.</string>

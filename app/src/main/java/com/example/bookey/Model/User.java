@@ -5,12 +5,13 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "users", indices = {@Index(value = {"userId"}, unique = true)})
+@Entity(tableName = "users", indices = {@Index(value = {"email"}, unique = true)})
 public class User {
+
+    @PrimaryKey
     @NonNull
     public String userId;
 
-    @PrimaryKey
     @NonNull
     public String email;
 
