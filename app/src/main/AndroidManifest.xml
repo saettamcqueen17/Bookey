@@ -14,12 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Bookey">
-        <activity android:name=".MapActivity" />
-        <activity android:name=".PersonalCatalogActivity" />
-        <activity android:name=".GeneralCatalogActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Activity.MappaActivity" />
+        <activity android:name=".Activity.CatalogoPersonaleActivity" />
+        <activity android:name=".Activity.CatalogoGeneraleActivity" />
+        <activity android:name=".Activity.MainActivity" />
         <activity
-            android:name=".WelcomeActivity"            android:exported="true">
+            android:name=".Activity.WelcomeActivity"            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

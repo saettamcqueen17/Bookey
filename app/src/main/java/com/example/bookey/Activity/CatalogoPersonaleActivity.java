@@ -1,4 +1,4 @@
-package com.example.bookey;
+package com.example.bookey.Activity;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -6,14 +6,15 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bookey.Model.LibroEntity;
+import com.example.bookey.R;
 import com.example.bookey.data.AppDatabase;
-import com.example.bookey.data.BookEntity;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class PersonalCatalogActivity extends AppCompatActivity {
+public class CatalogoPersonaleActivity extends AppCompatActivity {
 
     private AppDatabase appDatabase;
     private ExecutorService dbExecutor;
@@ -29,7 +30,7 @@ public class PersonalCatalogActivity extends AppCompatActivity {
         appDatabase = AppDatabase.getInstance(this);
         dbExecutor = Executors.newSingleThreadExecutor();
         statusText = findViewById(R.id.personalCatalogStatusTextView);
-        currentUserId = getIntent().getStringExtra(GeneralCatalogActivity.EXTRA_USER_ID);
+        currentUserId = getIntent().getStringExtra(CatalogoGeneraleActivity.EXTRA_USER_ID);
 
         loadPersonalCatalog();
     }
@@ -41,23 +42,23 @@ public class PersonalCatalogActivity extends AppCompatActivity {
         }
 
         dbExecutor.execute(() -> {
-            List<BookEntity> books = appDatabase.bookDao().getPersonalCatalogBooks(currentUserId);
+            List<LibroEntity> books = appDatabase.bookDao().getPersonalCatalogBooks(currentUserId);
             runOnUiThread(() -> renderPersonalCatalog(books));
         });
     }
 
-    private void renderPersonalCatalog(List<BookEntity> books) {
+    private void renderPersonalCatalog(List<LibroEntity> books) {
         if (books.isEmpty()) {
             statusText.setText(R.string.personal_catalog_empty);
             return;
         }
 
         StringBuilder builder = new StringBuilder(getString(R.string.personal_catalog_title_list_header));
-        for (BookEntity book : books) {
+        for (LibroEntity book : books) {
             builder.append("\n• ")
-                    .append(book.title)
+                    .append(book.titolo)
                     .append(" — ")
-                    .append(book.author)
+                    .append(book.autore)
                     .append(" (ISBN ")
                     .append(book.isbn)
                     .append(")");

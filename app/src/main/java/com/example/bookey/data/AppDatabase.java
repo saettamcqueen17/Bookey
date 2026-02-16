@@ -6,11 +6,18 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {User.class, BookEntity.class, PersonalCatalogEntry.class}, version = 4, exportSchema = false)public abstract class AppDatabase extends RoomDatabase {
+import com.example.bookey.Model.CatalogoPersonaleEntity;
+import com.example.bookey.Model.LibroEntity;
+import com.example.bookey.Model.User;
+
+@Database(entities = {User.class, LibroEntity.class, CatalogoPersonaleEntity.class}, version = 4, exportSchema = false)public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();
-    public abstract BookDao bookDao();
+    public abstract LibroDao bookDao();
 
+
+    //è il punto di accesso al database Room vero e proprio vogliamo quindi che sia
+    //inequivocabilmente unico, per cui sfruttiamo il pattern Singleton
     private static volatile AppDatabase INSTANCE;
 
     public static AppDatabase getInstance(Context context) {

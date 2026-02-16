@@ -1,4 +1,4 @@
-package com.example.bookey;
+package com.example.bookey.Activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -14,13 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.bookey.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 
 import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity {
+public class MappaActivity extends AppCompatActivity {
 
     private TextView locationText;
     private FusedLocationProviderClient fusedLocationClient;

@@ -13,19 +13,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bookey.R;
 
 import java.util.List;
-import java.util.Locale;
 
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
+
+//utilizziamo RecyclerView per non sovraccaricare l'applicazione
+// con meccanismi di caricamento manuale poco efficienti a lungo andare
+public class LibroAdapter extends RecyclerView.Adapter<LibroAdapter.BookViewHolder> {
 
     public interface OnAddBookClick {
-        void onAdd(Book book);
+        void onAdd(LibroUI libroUI);
     }
 
-    private final List<Book> books;
+    private final List<LibroUI> libroUIS;
     private final OnAddBookClick onAddBookClick;
 
-    public BookAdapter(List<Book> books, OnAddBookClick onAddBookClick) {
-        this.books = books;
+    public LibroAdapter(List<LibroUI> libroUIS, OnAddBookClick onAddBookClick) {
+        this.libroUIS = libroUIS;
         this.onAddBookClick = onAddBookClick;
     }
 
@@ -38,19 +40,19 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
-        Book book = books.get(position);
-        holder.title.setText(book.title);
-        holder.author.setText(book.author);
-        holder.publisher.setText(holder.itemView.getContext().getString(R.string.book_publisher, book.publisher));
-        holder.genre.setText(holder.itemView.getContext().getString(R.string.book_genre, book.genre));
+        LibroUI libroUI = libroUIS.get(position);
+        holder.title.setText(libroUI.title);
+        holder.author.setText(libroUI.author);
+        holder.publisher.setText(holder.itemView.getContext().getString(R.string.book_publisher, libroUI.publisher));
+        holder.genre.setText(holder.itemView.getContext().getString(R.string.book_genre, libroUI.genre));
 
         holder.cover.setImageResource(R.drawable.catalog_book_cover_placeholder);
-        holder.addButton.setOnClickListener(v -> onAddBookClick.onAdd(book));
+        holder.addButton.setOnClickListener(v -> onAddBookClick.onAdd(libroUI));
     }
 
     @Override
     public int getItemCount() {
-        return books.size();
+        return libroUIS.size();
     }
 
     static class BookViewHolder extends RecyclerView.ViewHolder {

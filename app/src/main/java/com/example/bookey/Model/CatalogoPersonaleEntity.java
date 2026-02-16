@@ -1,4 +1,4 @@
-package com.example.bookey.data;
+package com.example.bookey.Model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -6,7 +6,7 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 
 @Entity(
-        tableName = "personal_catalog_entries",
+        tableName = "CatalogoPersonaleEntity",
         primaryKeys = {"userId", "bookIsbn"},
         foreignKeys = {
                 @ForeignKey(
@@ -16,7 +16,7 @@ import androidx.room.Index;
                         onDelete = ForeignKey.CASCADE
                 ),
                 @ForeignKey(
-                        entity = BookEntity.class,
+                        entity = LibroEntity.class,
                         parentColumns = "isbn",
                         childColumns = "bookIsbn",
                         onDelete = ForeignKey.CASCADE
@@ -27,7 +27,7 @@ import androidx.room.Index;
                 @Index(value = {"bookIsbn"})
         }
 )
-public class PersonalCatalogEntry {
+public class CatalogoPersonaleEntity {
 
     @NonNull
     public String userId;
@@ -35,7 +35,7 @@ public class PersonalCatalogEntry {
     @NonNull
     public String bookIsbn;
 
-    public PersonalCatalogEntry(@NonNull String userId, @NonNull String bookIsbn) {
+    public CatalogoPersonaleEntity(@NonNull String userId, @NonNull String bookIsbn) {
         this.userId = userId;
         this.bookIsbn = bookIsbn;
     }

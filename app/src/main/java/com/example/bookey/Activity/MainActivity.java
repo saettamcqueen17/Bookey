@@ -1,4 +1,4 @@
-package com.example.bookey;
+package com.example.bookey.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +10,9 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bookey.R;
 import com.example.bookey.data.AppDatabase;
-import com.example.bookey.data.User;
+import com.example.bookey.Model.User;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.concurrent.ExecutorService;
@@ -154,17 +155,17 @@ public class MainActivity extends AppCompatActivity {
         openMapButton = findViewById(R.id.openMapButton);
 
         openGeneralCatalogButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, GeneralCatalogActivity.class);
-            intent.putExtra(GeneralCatalogActivity.EXTRA_USER_ID, authenticatedUserId);
+            Intent intent = new Intent(this, CatalogoGeneraleActivity.class);
+            intent.putExtra(CatalogoGeneraleActivity.EXTRA_USER_ID, authenticatedUserId);
             startActivity(intent);
         });
         openPersonalCatalogButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, PersonalCatalogActivity.class);
-            intent.putExtra(GeneralCatalogActivity.EXTRA_USER_ID, authenticatedUserId);
+            Intent intent = new Intent(this, CatalogoPersonaleActivity.class);
+            intent.putExtra(CatalogoGeneraleActivity.EXTRA_USER_ID, authenticatedUserId);
             startActivity(intent);
         });
         openMapButton.setOnClickListener(v ->
-                startActivity(new Intent(this, MapActivity.class)));
+                startActivity(new Intent(this, MappaActivity.class)));
     }
 
     @Override

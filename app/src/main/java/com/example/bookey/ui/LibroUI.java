@@ -1,6 +1,6 @@
 package com.example.bookey.ui;
 
-public class Book {
+public class LibroUI {
 
     public final String isbn ;
     public final String title;
@@ -10,7 +10,7 @@ public class Book {
 
 
 
-    public Book(String title, String author, String publisher, String genre, String isbn) {
+    public LibroUI(String title, String author, String publisher, String genre, String isbn) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
