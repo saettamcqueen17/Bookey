@@ -11,11 +11,12 @@ public class LibroUI {
 
 
     public LibroUI(String title, String author, String publisher, String genre, String isbn) {
+        this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.genre = genre;
 
-        this.isbn = isbn;
+
     }
 }
