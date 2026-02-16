@@ -10,7 +10,7 @@ public class LibroUI {
 
 
 
-    public LibroUI(String title, String author, String publisher, String genre, String isbn) {
+    public LibroUI(String isbn, String title, String author, String publisher, String genre) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;

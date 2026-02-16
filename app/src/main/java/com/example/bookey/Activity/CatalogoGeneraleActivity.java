@@ -1,6 +1,7 @@
 package com.example.bookey.Activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookey.Model.LibroEntity;
+import com.example.bookey.Model.User;
 import com.example.bookey.R;
 import com.example.bookey.data.AppDatabase;
 import com.example.bookey.Model.CatalogoPersonaleEntity;
@@ -38,7 +40,9 @@ public class CatalogoGeneraleActivity extends AppCompatActivity {
         appDatabase = AppDatabase.getInstance(this);
         dbExecutor = Executors.newSingleThreadExecutor();
         currentUserId = getIntent().getStringExtra(EXTRA_USER_ID);
-
+        if (currentUserId != null) {
+            currentUserId = currentUserId.trim();
+        }
         RecyclerView recyclerView = findViewById(R.id.generalCatalogRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -82,12 +86,25 @@ public class CatalogoGeneraleActivity extends AppCompatActivity {
     }
 
     private void addToPersonalCatalog(LibroUI libroUI) {
-        if (currentUserId == null || currentUserId.trim().isEmpty()) {
-            Toast.makeText(this, R.string.personal_catalog_user_required, Toast.LENGTH_SHORT).show();
+        if (currentUserId == null || currentUserId.isEmpty()) {            Toast.makeText(this, R.string.personal_catalog_user_required, Toast.LENGTH_SHORT).show();
             return;
         }
 
         dbExecutor.execute(() -> {
+
+            String uid = currentUserId == null ? null : currentUserId.trim();
+
+            Log.d("DEBUG_ADD", "uid raw = [" + currentUserId + "]");
+            Log.d("DEBUG_ADD", "uid trimmed = [" + uid + "]");
+            Log.d("DEBUG_ADD", "isbn = [" + libroUI.isbn + "]");
+
+            User userById = appDatabase.userDao().getUserByUserId(uid);
+            User userByEmail = appDatabase.userDao().getUserByEmail(uid);
+
+            Log.d("DEBUG_ADD", "userById = " + (userById != null));
+            Log.d("DEBUG_ADD", "userByEmail = " + (userByEmail != null));
+
+
             long result = appDatabase.bookDao().addToPersonalCatalog(new CatalogoPersonaleEntity(currentUserId, libroUI.isbn));
             runOnUiThread(() -> {
                 if (result == -1) {
