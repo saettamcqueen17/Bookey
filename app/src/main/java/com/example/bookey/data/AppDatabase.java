@@ -10,7 +10,7 @@ import com.example.bookey.Model.CatalogoPersonaleEntity;
 import com.example.bookey.Model.LibroEntity;
 import com.example.bookey.Model.User;
 
-@Database(entities = {User.class, LibroEntity.class, CatalogoPersonaleEntity.class}, version = 6, exportSchema = false)public abstract class AppDatabase extends RoomDatabase {
+@Database(entities = {User.class, LibroEntity.class, CatalogoPersonaleEntity.class}, version = 7, exportSchema = false)public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();
     public abstract LibroDao bookDao();

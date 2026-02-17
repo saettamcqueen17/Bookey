@@ -62,6 +62,11 @@ public class CatalogoGeneraleActivity extends AppCompatActivity {
         });
     }
 
+
+
+    //per lo sviluppo sfruttiamo questa funzione per popolare automaticamente il db Room
+    // che altrimenti sui cambi di versione perderebbe le entità che lo popolano
+    // e dovremmo ripopolarlo manualmente per il testing manuale.
     private void ensureDefaultGeneralCatalogSeeded() {
         int count = appDatabase.bookDao().getGeneralCatalogCount();
         if (count > 0) {
@@ -105,7 +110,7 @@ public class CatalogoGeneraleActivity extends AppCompatActivity {
             Log.d("DEBUG_ADD", "userByEmail = " + (userByEmail != null));
 
 
-            long result = appDatabase.bookDao().addToPersonalCatalog(new CatalogoPersonaleEntity(currentUserId, libroUI.isbn));
+            long result = appDatabase.bookDao().addToPersonalCatalog(new CatalogoPersonaleEntity(currentUserId, libroUI.isbn, "NON_LETTO"));
             runOnUiThread(() -> {
                 if (result == -1) {
                     Toast.makeText(this, R.string.book_already_in_personal_catalog, Toast.LENGTH_SHORT).show();

@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.bookey.Model.CatalogoPersonaleEntity;
 import com.example.bookey.Model.LibroEntity;
@@ -27,4 +28,10 @@ public interface LibroDao {
 
     @Query("SELECT b.* FROM LibroEntity b INNER JOIN CatalogoPersonaleEntity p ON p.bookIsbn = b.isbn WHERE p.userId = :userId ORDER BY b.titolo ASC")
     List<LibroEntity> getPersonalCatalogBooks(String userId);
+
+    @Update
+    void updatePersonalCatalogEntry(CatalogoPersonaleEntity entry);
+
+    @Query("UPDATE CatalogoPersonaleEntity SET readingStatus = :status WHERE userId = :userId AND bookIsbn = :bookIsbn")
+    void updateReadingStatus(String userId, String bookIsbn, String status);
 }

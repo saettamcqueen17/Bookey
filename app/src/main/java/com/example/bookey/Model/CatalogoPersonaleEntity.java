@@ -35,8 +35,12 @@ public class CatalogoPersonaleEntity {
     @NonNull
     public String bookIsbn;
 
-    public CatalogoPersonaleEntity(@NonNull String userId, @NonNull String bookIsbn) {
+    public String readingStatus; // "NON_LETTO", "IN_LETTURA", "LETTO"
+
+
+    public CatalogoPersonaleEntity(@NonNull String userId, @NonNull String bookIsbn, String readingStatus) {
         this.userId = userId;
         this.bookIsbn = bookIsbn;
+        this.readingStatus = readingStatus != null ? readingStatus : "NON_LETTO";
     }
 }

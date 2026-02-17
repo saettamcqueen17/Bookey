@@ -5,11 +5,17 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bookey.Model.CatalogoPersonaleEntity;
 import com.example.bookey.Model.LibroEntity;
 import com.example.bookey.R;
 import com.example.bookey.data.AppDatabase;
+import com.example.bookey.ui.LibroPersonaleUI;
+import com.example.bookey.ui.LibroPersonaleAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,6 +25,7 @@ public class CatalogoPersonaleActivity extends AppCompatActivity {
     private AppDatabase appDatabase;
     private ExecutorService dbExecutor;
     private TextView statusText;
+    private RecyclerView recyclerView;
     private String currentUserId;
 
     @Override
@@ -30,6 +37,8 @@ public class CatalogoPersonaleActivity extends AppCompatActivity {
         appDatabase = AppDatabase.getInstance(this);
         dbExecutor = Executors.newSingleThreadExecutor();
         statusText = findViewById(R.id.personalCatalogStatusTextView);
+        recyclerView = findViewById(R.id.personalCatalogRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         currentUserId = getIntent().getStringExtra(CatalogoGeneraleActivity.EXTRA_USER_ID);
 
         loadPersonalCatalog();
@@ -50,20 +59,37 @@ public class CatalogoPersonaleActivity extends AppCompatActivity {
     private void renderPersonalCatalog(List<LibroEntity> books) {
         if (books.isEmpty()) {
             statusText.setText(R.string.personal_catalog_empty);
+            recyclerView.setVisibility(android.view.View.GONE);
             return;
         }
 
-        StringBuilder builder = new StringBuilder(getString(R.string.personal_catalog_title_list_header));
-        for (LibroEntity book : books) {
-            builder.append("\n• ")
-                    .append(book.titolo)
-                    .append(" — ")
-                    .append(book.autore)
-                    .append(" (ISBN ")
-                    .append(book.isbn)
-                    .append(")");
+        statusText.setVisibility(android.view.View.GONE);
+        recyclerView.setVisibility(android.view.View.VISIBLE);
+
+        List<LibroPersonaleUI> libriUI = mapToPersonalUiBooks(books);
+        LibroPersonaleAdapter adapter = new LibroPersonaleAdapter(libriUI, this::updateReadingStatus);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private List<LibroPersonaleUI> mapToPersonalUiBooks(List<LibroEntity> entities) {
+        List<LibroPersonaleUI> libriUI = new ArrayList<>();
+        for (LibroEntity entity : entities) {
+            libriUI.add(new LibroPersonaleUI(
+                entity.isbn,
+                entity.titolo,
+                entity.autore,
+                entity.coverUrl,
+                "NON_LETTO"
+            ));
         }
-        statusText.setText(builder.toString());
+        return libriUI;
+    }
+
+    private void updateReadingStatus(LibroPersonaleUI libro, String newStatus) {
+        dbExecutor.execute(() -> {
+            CatalogoPersonaleEntity entry = new CatalogoPersonaleEntity(currentUserId, libro.isbn, newStatus);
+            appDatabase.bookDao().updateReadingStatus(currentUserId, libro.isbn, newStatus);
+        });
     }
 
     @Override

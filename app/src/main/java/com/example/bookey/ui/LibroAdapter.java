@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.bookey.R;
 
 import java.util.List;
@@ -46,7 +47,15 @@ public class LibroAdapter extends RecyclerView.Adapter<LibroAdapter.BookViewHold
         holder.publisher.setText(holder.itemView.getContext().getString(R.string.book_publisher, libroUI.publisher));
         holder.genre.setText(holder.itemView.getContext().getString(R.string.book_genre, libroUI.genre));
 
-        holder.cover.setImageResource(R.drawable.catalog_book_cover_placeholder);
+        if (libroUI.coverUrl == null || libroUI.coverUrl.trim().isEmpty()) {
+            holder.cover.setImageResource(R.drawable.catalog_book_cover_placeholder);
+        } else {
+            Glide.with(holder.cover)
+                .load(libroUI.coverUrl)
+                .placeholder(R.drawable.catalog_book_cover_placeholder)
+                .error(R.drawable.catalog_book_cover_placeholder)
+                .into(holder.cover);
+        }
         holder.addButton.setOnClickListener(v -> onAddBookClick.onAdd(libroUI));
     }
 
