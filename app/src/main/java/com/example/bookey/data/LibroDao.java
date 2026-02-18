@@ -17,6 +17,15 @@ public interface LibroDao {
     @Query("SELECT * FROM LibroEntity ORDER BY titolo ASC")
     List<LibroEntity> getGeneralCatalogBooks();
 
+    @Query("SELECT * FROM LibroEntity ORDER BY titolo ASC")
+    List<LibroEntity> getAllGeneralCatalogBooks();
+
+    @Query("SELECT * FROM LibroEntity WHERE " +
+            "(:titleFilter IS NULL OR LOWER(titolo) LIKE '%' || :titleFilter || '%') AND " +
+            "(:authorFilter IS NULL OR LOWER(autore) LIKE '%' || :authorFilter || '%') " +
+            "ORDER BY titolo ASC")
+    List<LibroEntity> getFilteredGeneralCatalogBooks(String titleFilter, String authorFilter);
+
     @Query("SELECT COUNT(*) FROM LibroEntity")
     int getGeneralCatalogCount();
 

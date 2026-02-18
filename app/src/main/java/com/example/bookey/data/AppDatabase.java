@@ -12,7 +12,7 @@ import com.example.bookey.Model.SharedBookEntity;
 import com.example.bookey.Model.User;
 import com.example.bookey.Model.UserLocationEntity;
 
-@Database(entities = {User.class, LibroEntity.class, CatalogoPersonaleEntity.class, UserLocationEntity.class, SharedBookEntity.class}, version = 9, exportSchema = false)public abstract class AppDatabase extends RoomDatabase {
+@Database(entities = {User.class, LibroEntity.class, CatalogoPersonaleEntity.class, UserLocationEntity.class, SharedBookEntity.class}, version = 10, exportSchema = false)public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();
     public abstract LibroDao bookDao();
