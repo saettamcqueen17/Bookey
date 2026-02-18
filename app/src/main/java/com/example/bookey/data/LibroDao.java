@@ -34,4 +34,10 @@ public interface LibroDao {
 
     @Query("UPDATE CatalogoPersonaleEntity SET readingStatus = :status WHERE userId = :userId AND bookIsbn = :bookIsbn")
     void updateReadingStatus(String userId, String bookIsbn, String status);
+
+    @Query("SELECT * FROM CatalogoPersonaleEntity WHERE userId = :currentUserId")
+    List<CatalogoPersonaleEntity> getPersonalCatalogByUserId(String currentUserId);
+
+    @Query("SELECT * FROM LibroEntity WHERE isbn = :bookIsbn LIMIT 1")
+    LibroEntity getBookByIsbn(String bookIsbn);
 }

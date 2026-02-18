@@ -182,8 +182,11 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(CatalogoGeneraleActivity.EXTRA_USER_ID, authenticatedUserId);
             startActivity(intent);
         });
-        openMapButton.setOnClickListener(v ->
-                startActivity(new Intent(this, MappaActivity.class)));
+        openMapButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MappaActivity.class);
+            intent.putExtra("extra_user_id", authenticatedUserId);
+            startActivity(intent);
+        });
     }
 
     @Override

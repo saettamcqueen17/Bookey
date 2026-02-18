@@ -38,9 +38,11 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.recyclerview)
+    implementation(libs.coordinatorlayout)
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
     implementation(libs.play.services.location)
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
