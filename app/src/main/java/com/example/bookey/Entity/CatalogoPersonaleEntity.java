@@ -1,4 +1,4 @@
-package com.example.bookey.Model;
+package com.example.bookey.Entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -6,11 +6,11 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 
 @Entity(
-        tableName = "shared_books",
+        tableName = "CatalogoPersonaleEntity",
         primaryKeys = {"userId", "bookIsbn"},
         foreignKeys = {
                 @ForeignKey(
-                        entity = User.class,
+                        entity = UserEntity.class,
                         parentColumns = "userId",
                         childColumns = "userId",
                         onDelete = ForeignKey.CASCADE
@@ -27,7 +27,7 @@ import androidx.room.Index;
                 @Index(value = {"bookIsbn"})
         }
 )
-public class SharedBookEntity {
+public class CatalogoPersonaleEntity {
 
     @NonNull
     public String userId;
@@ -35,14 +35,12 @@ public class SharedBookEntity {
     @NonNull
     public String bookIsbn;
 
-    public int displayOrder; // ordine di visualizzazione (1-5)
-    public boolean isManuallySelected; // true se selezionato dall'utente, false se casuale
+    public String readingStatus; // "NON_LETTO", "IN_LETTURA", "LETTO"
 
-    public SharedBookEntity(@NonNull String userId, @NonNull String bookIsbn, int displayOrder, boolean isManuallySelected) {
+
+    public CatalogoPersonaleEntity(@NonNull String userId, @NonNull String bookIsbn, String readingStatus) {
         this.userId = userId;
         this.bookIsbn = bookIsbn;
-        this.displayOrder = displayOrder;
-        this.isManuallySelected = isManuallySelected;
+        this.readingStatus = readingStatus != null ? readingStatus : "NON_LETTO";
     }
 }
-

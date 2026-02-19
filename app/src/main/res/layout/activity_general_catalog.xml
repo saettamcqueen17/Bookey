@@ -18,15 +18,15 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <!-- Sezione filtri -->
+        <!-- Sezione RICERCA -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="2dp"
-            app:strokeColor="#D8D8DD"
-            app:strokeWidth="1dp">
+            app:strokeColor="#4CAF50"
+            app:strokeWidth="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,9 +37,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Filtra libri"
+                    android:text="🔍 Ricerca libri"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:textColor="#4CAF50"
                     android:paddingBottom="8dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -49,7 +50,7 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/filterTitleEditText"
+                        android:id="@+id/searchTitleEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
@@ -64,40 +65,102 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/filterAuthorEditText"
+                        android:id="@+id/searchAuthorEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <LinearLayout
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Sezione FILTRI -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp"
+            app:strokeColor="#2196F3"
+            app:strokeWidth="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔧 Filtri"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#2196F3"
+                    android:paddingBottom="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Genere"
+                    android:textSize="14sp"
+                    android:paddingBottom="4dp" />
+
+                <Spinner
+                    android:id="@+id/genreFilterSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="12dp">
+                    android:minHeight="48dp"
+                    android:padding="8dp"
+                    android:background="@android:drawable/edit_text" />
 
-                    <Button
-                        android:id="@+id/applyFiltersButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:text="Applica Filtri" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Casa Editrice"
+                    android:textSize="14sp"
+                    android:paddingBottom="4dp" />
 
-                    <Button
-                        android:id="@+id/clearFiltersButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        android:text="Cancella"
-                        style="@style/Widget.Material3.Button.OutlinedButton" />
-                </LinearLayout>
+                <Spinner
+                    android:id="@+id/publisherFilterSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:padding="8dp"
+                    android:background="@android:drawable/edit_text" />
 
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- Pulsanti azioni -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <Button
+                android:id="@+id/applySearchFiltersButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Cerca e Filtra" />
+
+            <Button
+                android:id="@+id/clearSearchFiltersButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Cancella Tutto"
+                style="@style/Widget.Material3.Button.OutlinedButton" />
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/generalCatalogRecyclerView"

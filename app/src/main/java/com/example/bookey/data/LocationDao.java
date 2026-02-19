@@ -5,8 +5,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.bookey.Model.SharedBookEntity;
-import com.example.bookey.Model.UserLocationEntity;
+import com.example.bookey.Entity.SharedBookEntity;
+import com.example.bookey.Entity.UserLocationEntity;
 
 import java.util.List;
 

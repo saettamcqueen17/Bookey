@@ -1,4 +1,4 @@
-package com.example.bookey.Model;
+package com.example.bookey.Entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey;
         tableName = "user_locations",
         foreignKeys = {
                 @ForeignKey(
-                        entity = User.class,
+                        entity = UserEntity.class,
                         parentColumns = "userId",
                         childColumns = "userId",
                         onDelete = ForeignKey.CASCADE
@@ -26,7 +26,7 @@ public class UserLocationEntity {
 
     public double latitude;
     public double longitude;
-    public long timestamp; // timestamp dell'ultimo aggiornamento
+    public long timestamp;
 
     public UserLocationEntity(@NonNull String userId, double latitude, double longitude, long timestamp) {
         this.userId = userId;

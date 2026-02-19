@@ -3,7 +3,7 @@
     <base-config cleartextTrafficPermitted="true">
         <trust-anchors>
             <certificates src="system" />
-            <certificates src="user" />
+            <certificates src="userEntity" />
         </trust-anchors>
     </base-config>
 </network-security-config>

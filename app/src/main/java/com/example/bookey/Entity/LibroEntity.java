@@ -1,4 +1,4 @@
-package com.example.bookey.Model;
+package com.example.bookey.Entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

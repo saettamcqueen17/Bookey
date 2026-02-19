@@ -6,8 +6,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.bookey.Model.CatalogoPersonaleEntity;
-import com.example.bookey.Model.LibroEntity;
+import com.example.bookey.Entity.CatalogoPersonaleEntity;
+import com.example.bookey.Entity.LibroEntity;
 
 import java.util.List;
 
@@ -25,6 +25,31 @@ public interface LibroDao {
             "(:authorFilter IS NULL OR LOWER(autore) LIKE '%' || :authorFilter || '%') " +
             "ORDER BY titolo ASC")
     List<LibroEntity> getFilteredGeneralCatalogBooks(String titleFilter, String authorFilter);
+
+    /**
+     * Query completa con ricerca (titolo/autore) e filtri (genere/editore)
+     * La ricerca è case-insensitive e parziale
+     * I filtri sono esatti
+     */
+    @Query("SELECT * FROM LibroEntity WHERE " +
+            "(:searchTitle IS NULL OR LOWER(titolo) LIKE '%' || :searchTitle || '%') AND " +
+            "(:searchAuthor IS NULL OR LOWER(autore) LIKE '%' || :searchAuthor || '%') AND " +
+            "(:filterGenre IS NULL OR genere = :filterGenre) AND " +
+            "(:filterPublisher IS NULL OR editore = :filterPublisher) " +
+            "ORDER BY titolo ASC")
+    List<LibroEntity> searchAndFilterBooks(String searchTitle, String searchAuthor,
+                                           String filterGenre, String filterPublisher);
+
+    /**
+     * Query per generi che matchano una lista di nomi (per la gerarchia)
+     */
+    @Query("SELECT * FROM LibroEntity WHERE " +
+            "(:searchTitle IS NULL OR LOWER(titolo) LIKE '%' || :searchTitle || '%') AND " +
+            "(:searchAuthor IS NULL OR LOWER(autore) LIKE '%' || :searchAuthor || '%') AND " +
+            "(:filterPublisher IS NULL OR editore = :filterPublisher) " +
+            "ORDER BY titolo ASC")
+    List<LibroEntity> searchAndFilterBooksWithGenreList(String searchTitle, String searchAuthor,
+                                                        String filterPublisher);
 
     @Query("SELECT COUNT(*) FROM LibroEntity")
     int getGeneralCatalogCount();

@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookey.Model.LibroEntity;
+import com.example.bookey.Entity.LibroEntity;
 import com.example.bookey.R;
 
 import java.util.List;

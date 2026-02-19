@@ -6,13 +6,13 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.bookey.Model.CatalogoPersonaleEntity;
-import com.example.bookey.Model.LibroEntity;
-import com.example.bookey.Model.SharedBookEntity;
-import com.example.bookey.Model.User;
-import com.example.bookey.Model.UserLocationEntity;
+import com.example.bookey.Entity.CatalogoPersonaleEntity;
+import com.example.bookey.Entity.LibroEntity;
+import com.example.bookey.Entity.SharedBookEntity;
+import com.example.bookey.Entity.UserEntity;
+import com.example.bookey.Entity.UserLocationEntity;
 
-@Database(entities = {User.class, LibroEntity.class, CatalogoPersonaleEntity.class, UserLocationEntity.class, SharedBookEntity.class}, version = 10, exportSchema = false)public abstract class AppDatabase extends RoomDatabase {
+@Database(entities = {UserEntity.class, LibroEntity.class, CatalogoPersonaleEntity.class, UserLocationEntity.class, SharedBookEntity.class}, version = 10, exportSchema = false)public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();
     public abstract LibroDao bookDao();

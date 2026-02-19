@@ -3,7 +3,6 @@ package com.example.bookey.Activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -22,11 +21,11 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookey.Model.CatalogoPersonaleEntity;
-import com.example.bookey.Model.LibroEntity;
-import com.example.bookey.Model.SharedBookEntity;
-import com.example.bookey.Model.User;
-import com.example.bookey.Model.UserLocationEntity;
+import com.example.bookey.Entity.CatalogoPersonaleEntity;
+import com.example.bookey.Entity.LibroEntity;
+import com.example.bookey.Entity.SharedBookEntity;
+import com.example.bookey.Entity.UserEntity;
+import com.example.bookey.Entity.UserLocationEntity;
 import com.example.bookey.Model.UserMapData;
 import com.example.bookey.R;
 import com.example.bookey.data.AppDatabase;
@@ -366,7 +365,7 @@ public class MappaActivity extends AppCompatActivity {
                     // Filtra per raggio selezionato
                     if (distanceKm <= selectedRadiusKm) {
                         // Carica i dati dell'utente
-                        User user = appDatabase.userDao().getUserByUserId(userLocation.userId);
+                        UserEntity userEntity = appDatabase.userDao().getUserByUserId(userLocation.userId);
 
                         // Carica i libri condivisi
                         List<SharedBookEntity> sharedBookEntries = appDatabase.locationDao()
@@ -380,10 +379,10 @@ public class MappaActivity extends AppCompatActivity {
                             }
                         }
 
-                        if (user != null) {
+                        if (userEntity != null) {
                             nearbyUsers.add(new UserMapData(
-                                    user.userId,
-                                    user.displayName,
+                                    userEntity.userId,
+                                    userEntity.displayName,
                                     userLocation.latitude,
                                     userLocation.longitude,
                                     sharedBooks

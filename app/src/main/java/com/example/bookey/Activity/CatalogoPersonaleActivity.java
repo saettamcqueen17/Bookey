@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookey.Model.CatalogoPersonaleEntity;
-import com.example.bookey.Model.LibroEntity;
+import com.example.bookey.Entity.CatalogoPersonaleEntity;
+import com.example.bookey.Entity.LibroEntity;
 import com.example.bookey.R;
 import com.example.bookey.data.AppDatabase;
 import com.example.bookey.ui.LibroPersonaleUI;

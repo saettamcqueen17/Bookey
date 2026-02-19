@@ -11,9 +11,9 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bookey.Entity.UserEntity;
 import com.example.bookey.R;
 import com.example.bookey.data.AppDatabase;
-import com.example.bookey.Model.User;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.concurrent.ExecutorService;
@@ -93,20 +93,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         safeRunDbTask(() -> {
-            User existingUserByEmail = appDatabase.userDao().getUserByEmail(email);
-            if (existingUserByEmail != null) {
+            UserEntity existingUserEntityByEmail = appDatabase.userDao().getUserByEmail(email);
+            if (existingUserEntityByEmail != null) {
                 runOnUiThread(() -> authStatusText.setText(getString(R.string.auth_user_exists, email)));
                 return;
             }
 
-            User existingUserByUserId = appDatabase.userDao().getUserByUserId(userId);
-            if (existingUserByUserId != null) {
+            UserEntity existingUserByUserEntityId = appDatabase.userDao().getUserByUserId(userId);
+            if (existingUserByUserEntityId != null) {
                 runOnUiThread(() -> authStatusText.setText(getString(R.string.auth_user_id_exists, userId)));
                 return;
             }
 
             String displayName = email.contains("@") ? email.substring(0, email.indexOf('@')) : email;
-            long result = appDatabase.userDao().register(new User(userId, email, password, displayName));
+            long result = appDatabase.userDao().register(new UserEntity(userId, email, password, displayName));
             runOnUiThread(() -> {
                 if (result == -1) {
                     authStatusText.setText(getString(R.string.auth_user_exists, email));
@@ -127,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         safeRunDbTask(() -> {
-            User user = appDatabase.userDao().login(email, password);
+            UserEntity userEntity = appDatabase.userDao().login(email, password);
             runOnUiThread(() -> {
-                if (user == null) {
+                if (userEntity == null) {
                     authStatusText.setText(R.string.auth_login_failed);
                 } else {
-                    onAuthenticationSuccess(user.userId, user.displayName, false);
+                    onAuthenticationSuccess(userEntity.userId, userEntity.displayName, false);
                 }
             });
         });

@@ -2,8 +2,12 @@ package com.example.bookey.Activity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -11,11 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookey.Model.LibroEntity;
-import com.example.bookey.Model.User;
+import com.example.bookey.Model.BookGenre;
+import com.example.bookey.Model.BookPublisher;
+import com.example.bookey.Entity.LibroEntity;
+import com.example.bookey.Entity.UserEntity;
 import com.example.bookey.R;
 import com.example.bookey.data.AppDatabase;
-import com.example.bookey.Model.CatalogoPersonaleEntity;
+import com.example.bookey.Entity.CatalogoPersonaleEntity;
 import com.example.bookey.ui.LibroUI;
 import com.example.bookey.ui.LibroAdapter;
 
@@ -33,11 +39,24 @@ public class CatalogoGeneraleActivity extends AppCompatActivity {
     private AppDatabase appDatabase;
     private ExecutorService dbExecutor;
     private String currentUserId;
+
+
     private RecyclerView recyclerView;
-    private EditText filterTitleEditText;
-    private EditText filterAuthorEditText;
-    private Button applyFiltersButton;
-    private Button clearFiltersButton;
+
+    // Ricerca
+    private EditText searchTitleEditText;
+    private EditText searchAuthorEditText;
+
+    // Filtri
+    private Spinner genreFilterSpinner;
+    private Spinner publisherFilterSpinner;
+
+    private Button applySearchFiltersButton;
+    private Button clearSearchFiltersButton;
+
+    // Selezioni correnti
+    private BookGenre selectedGenre = null;
+    private BookPublisher selectedPublisher = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,33 +71,157 @@ public class CatalogoGeneraleActivity extends AppCompatActivity {
             currentUserId = currentUserId.trim();
         }
 
-        // Inizializza le views
+
         recyclerView = findViewById(R.id.generalCatalogRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        filterTitleEditText = (EditText) findViewById(R.id.filterTitleEditText);
-        filterAuthorEditText = (EditText) findViewById(R.id.filterAuthorEditText);
-        applyFiltersButton = findViewById(R.id.applyFiltersButton);
-        clearFiltersButton = findViewById(R.id.clearFiltersButton);
 
-        // Setup listeners per i filtri
-        applyFiltersButton.setOnClickListener(v -> applyFilters());
-        clearFiltersButton.setOnClickListener(v -> clearFilters());
+        searchTitleEditText = findViewById(R.id.searchTitleEditText);
+        searchAuthorEditText = findViewById(R.id.searchAuthorEditText);
 
-        loadCatalog(null, null);
+
+        genreFilterSpinner = findViewById(R.id.genreFilterSpinner);
+        publisherFilterSpinner = findViewById(R.id.publisherFilterSpinner);
+
+
+        applySearchFiltersButton = findViewById(R.id.applySearchFiltersButton);
+        clearSearchFiltersButton = findViewById(R.id.clearSearchFiltersButton);
+
+
+        setupGenreSpinner();
+
+
+        setupPublisherSpinner();
+
+
+        applySearchFiltersButton.setOnClickListener(v -> applySearchAndFilters());
+        clearSearchFiltersButton.setOnClickListener(v -> clearAll());
+
+        // Carica catalogo iniziale
+        loadCatalog(null, null, null, null);
     }
 
-    private void loadCatalog(String titleFilter, String authorFilter) {
+    private void setupGenreSpinner() {
+        List<String> genreOptions = new ArrayList<>();
+        genreOptions.add("-- Tutti i generi --");
+
+        //  solo i generi principali
+        for (BookGenre genre : BookGenre.getMainGenres()) {
+            genreOptions.add(genre.getDisplayName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                genreOptions
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genreFilterSpinner.setAdapter(adapter);
+
+        genreFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    selectedGenre = null;
+                } else {
+                    String displayName = genreOptions.get(position);
+                    for (BookGenre genre : BookGenre.getMainGenres()) {
+                        if (genre.getDisplayName().equals(displayName)) {
+                            selectedGenre = genre;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedGenre = null;
+            }
+        });
+    }
+
+    private void setupPublisherSpinner() {
+        List<String> publisherOptions = new ArrayList<>();
+        publisherOptions.add("-- Tutte le case editrici --");
+
+        for (BookPublisher publisher : BookPublisher.getAllPublishers()) {
+            publisherOptions.add(publisher.getDisplayName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                publisherOptions
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        publisherFilterSpinner.setAdapter(adapter);
+
+        publisherFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    selectedPublisher = null;
+                } else {
+                    String displayName = publisherOptions.get(position);
+                    for (BookPublisher publisher : BookPublisher.getAllPublishers()) {
+                        if (publisher.getDisplayName().equals(displayName)) {
+                            selectedPublisher = publisher;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedPublisher = null;
+            }
+        });
+    }
+
+    private void loadCatalog(String searchTitle, String searchAuthor,
+                            BookGenre filterGenre, BookPublisher filterPublisher) {
         dbExecutor.execute(() -> {
             ensureDefaultGeneralCatalogSeeded();
 
             List<LibroEntity> entities;
-            if (titleFilter == null && authorFilter == null) {
-                // Nessun filtro - carica tutto
+
+            // Se nessun filtro/ricerca applicato
+            if (searchTitle == null && searchAuthor == null &&
+                filterGenre == null && filterPublisher == null) {
                 entities = appDatabase.bookDao().getGeneralCatalogBooks();
             } else {
-                // Applica filtri
-                entities = appDatabase.bookDao().getFilteredGeneralCatalogBooks(titleFilter, authorFilter);
+                // Applica ricerca e filtri
+                String publisherName = filterPublisher != null ? filterPublisher.getDisplayName() : null;
+
+                // Query base senza filtraggio genere gerarchico
+                entities = appDatabase.bookDao().searchAndFilterBooks(
+                    searchTitle,
+                    searchAuthor,
+                    null,  // Non usiamo questo parametro
+                    publisherName
+                );
+
+                // Filtraggio genere gerarchico in memoria
+                if (filterGenre != null) {
+                    List<String> allowedGenres = filterGenre.getAllMatchingGenreNames();
+                    List<LibroEntity> filteredByGenre = new ArrayList<>();
+
+                    for (LibroEntity entity : entities) {
+                        if (entity.genere != null) {
+                            // Controllo diretto sul nome o match con gerarchia
+                            for (String allowedGenre : allowedGenres) {
+                                if (entity.genere.equalsIgnoreCase(allowedGenre) ||
+                                    entity.genere.toUpperCase().equals(allowedGenre)) {
+                                    filteredByGenre.add(entity);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    entities = filteredByGenre;
+                }
             }
 
             List<LibroUI> libroUIS = mapToUiBooks(entities);
@@ -87,34 +230,61 @@ public class CatalogoGeneraleActivity extends AppCompatActivity {
                 LibroAdapter adapter = new LibroAdapter(libroUIS, this::addToPersonalCatalog);
                 recyclerView.setAdapter(adapter);
 
-                if (titleFilter != null || authorFilter != null) {
-                    Toast.makeText(this, "Trovati " + libroUIS.size() + " libri", Toast.LENGTH_SHORT).show();
+                if (searchTitle != null || searchAuthor != null ||
+                    filterGenre != null || filterPublisher != null) {
+                    String message;
+                    if (libroUIS.isEmpty()) {
+                        message = "Nessun libro trovato con i criteri specificati";
+                    } else {
+                        message = "Trovati " + libroUIS.size() + " libri";
+                    }
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 }
             });
         });
     }
 
-    private void applyFilters() {
-        String titleFilter = filterTitleEditText.getText().toString().trim();
-        String authorFilter = filterAuthorEditText.getText().toString().trim();
+    private void applySearchAndFilters() {
+        // Ricerca (testo libero)
+        String searchTitle = searchTitleEditText.getText().toString().trim();
+        String searchAuthor = searchAuthorEditText.getText().toString().trim();
 
-        // Converte stringhe vuote in null per la query SQL
-        String title = titleFilter.isEmpty() ? null : titleFilter.toLowerCase(Locale.ITALY);
-        String author = authorFilter.isEmpty() ? null : authorFilter.toLowerCase(Locale.ITALY);
+        // Converte stringhe vuote in null
+        String title = searchTitle.isEmpty() ? null : searchTitle.toLowerCase(Locale.ITALY);
+        String author = searchAuthor.isEmpty() ? null : searchAuthor.toLowerCase(Locale.ITALY);
 
-        if (title == null && author == null) {
-            Toast.makeText(this, "Inserisci almeno un criterio di ricerca", Toast.LENGTH_SHORT).show();
+        // Controlla se c'è almeno un criterio
+        if (title == null && author == null && selectedGenre == null && selectedPublisher == null) {
+            Toast.makeText(this, "Inserisci almeno un criterio di ricerca o seleziona un filtro",
+                          Toast.LENGTH_SHORT).show();
             return;
         }
 
-        loadCatalog(title, author);
+        // Log per debug
+        Log.d("SEARCH_FILTER", "Ricerca titolo: " + title);
+        Log.d("SEARCH_FILTER", "Ricerca autore: " + author);
+        Log.d("SEARCH_FILTER", "Filtro genere: " + (selectedGenre != null ? selectedGenre.getDisplayName() : "nessuno"));
+        Log.d("SEARCH_FILTER", "Filtro editore: " + (selectedPublisher != null ? selectedPublisher.getDisplayName() : "nessuno"));
+
+        loadCatalog(title, author, selectedGenre, selectedPublisher);
     }
 
-    private void clearFilters() {
-        filterTitleEditText.setText("");
-        filterAuthorEditText.setText("");
-        loadCatalog(null, null);
-        Toast.makeText(this, "Filtri rimossi", Toast.LENGTH_SHORT).show();
+    private void clearAll() {
+        // Pulisci ricerca
+        searchTitleEditText.setText("");
+        searchAuthorEditText.setText("");
+
+        // Reset spinner
+        genreFilterSpinner.setSelection(0);
+        publisherFilterSpinner.setSelection(0);
+
+        // Reset selezioni
+        selectedGenre = null;
+        selectedPublisher = null;
+
+        // Ricarica tutto
+        loadCatalog(null, null, null, null);
+        Toast.makeText(this, "Ricerca e filtri rimossi", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -164,11 +334,11 @@ public class CatalogoGeneraleActivity extends AppCompatActivity {
             Log.d("DEBUG_ADD", "uid trimmed = [" + uid + "]");
             Log.d("DEBUG_ADD", "isbn = [" + libroUI.isbn + "]");
 
-            User userById = appDatabase.userDao().getUserByUserId(uid);
-            User userByEmail = appDatabase.userDao().getUserByEmail(uid);
+            UserEntity userEntityById = appDatabase.userDao().getUserByUserId(uid);
+            UserEntity userEntityByEmail = appDatabase.userDao().getUserByEmail(uid);
 
-            Log.d("DEBUG_ADD", "userById = " + (userById != null));
-            Log.d("DEBUG_ADD", "userByEmail = " + (userByEmail != null));
+            Log.d("DEBUG_ADD", "userById = " + (userEntityById != null));
+            Log.d("DEBUG_ADD", "userByEmail = " + (userEntityByEmail != null));
 
 
             long result = appDatabase.bookDao().addToPersonalCatalog(new CatalogoPersonaleEntity(currentUserId, libroUI.isbn, "NON_LETTO"));
