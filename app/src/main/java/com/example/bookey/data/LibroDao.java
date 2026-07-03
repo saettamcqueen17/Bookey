@@ -26,11 +26,7 @@ public interface LibroDao {
             "ORDER BY titolo ASC")
     List<LibroEntity> getFilteredGeneralCatalogBooks(String titleFilter, String authorFilter);
 
-    /**
-     * Query completa con ricerca (titolo/autore) e filtri (genere/editore)
-     * La ricerca è case-insensitive e parziale
-     * I filtri sono esatti
-     */
+
     @Query("SELECT * FROM LibroEntity WHERE " +
             "(:searchTitle IS NULL OR LOWER(titolo) LIKE '%' || :searchTitle || '%') AND " +
             "(:searchAuthor IS NULL OR LOWER(autore) LIKE '%' || :searchAuthor || '%') AND " +
@@ -40,9 +36,7 @@ public interface LibroDao {
     List<LibroEntity> searchAndFilterBooks(String searchTitle, String searchAuthor,
                                            String filterGenre, String filterPublisher);
 
-    /**
-     * Query per generi che matchano una lista di nomi (per la gerarchia)
-     */
+
     @Query("SELECT * FROM LibroEntity WHERE " +
             "(:searchTitle IS NULL OR LOWER(titolo) LIKE '%' || :searchTitle || '%') AND " +
             "(:searchAuthor IS NULL OR LOWER(autore) LIKE '%' || :searchAuthor || '%') AND " +

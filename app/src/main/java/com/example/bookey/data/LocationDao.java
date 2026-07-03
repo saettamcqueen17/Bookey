@@ -25,7 +25,7 @@ public interface LocationDao {
     @Query("DELETE FROM user_locations WHERE userId = :userId")
     void deleteLocationByUserId(String userId);
 
-    // Shared books queries
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSharedBook(SharedBookEntity sharedBook);
 

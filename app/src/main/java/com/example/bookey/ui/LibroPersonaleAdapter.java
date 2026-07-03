@@ -43,7 +43,7 @@ public class LibroPersonaleAdapter extends RecyclerView.Adapter<LibroPersonaleAd
         holder.title.setText(libro.title);
         holder.author.setText(libro.author);
 
-        // Carica la copertina con Glide
+        // Carica la copertina
         if (libro.coverUrl == null || libro.coverUrl.trim().isEmpty()) {
             holder.cover.setImageResource(R.drawable.catalog_book_cover_placeholder);
         } else {
@@ -54,10 +54,10 @@ public class LibroPersonaleAdapter extends RecyclerView.Adapter<LibroPersonaleAd
                 .into(holder.cover);
         }
 
-        // Setup toggle a 3 stati per lo stato di lettura
+        // toggle a 3 stati per lo stato di lettura
         updateButtonStates(holder, libro.readingStatus);
 
-        // Listener per i tre button
+
         holder.notReadButton.setOnClickListener(v -> {
             libro.readingStatus = "NON_LETTO";
             updateButtonStates(holder, "NON_LETTO");
@@ -78,7 +78,7 @@ public class LibroPersonaleAdapter extends RecyclerView.Adapter<LibroPersonaleAd
     }
 
     private void updateButtonStates(PersonalBookViewHolder holder, String currentStatus) {
-        // Reset tutti i button a stato inattivo
+
         resetButtonStyle(holder.notReadButton);
         resetButtonStyle(holder.readingButton);
         resetButtonStyle(holder.readButton);

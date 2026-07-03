@@ -51,13 +51,30 @@ public class CatalogoPersonaleActivity extends AppCompatActivity {
         }
 
         dbExecutor.execute(() -> {
-            List<LibroEntity> books = appDatabase.bookDao().getPersonalCatalogBooks(currentUserId);
-            runOnUiThread(() -> renderPersonalCatalog(books));
+            // Carica il catalogo personale con gli stati di lettura
+            List<CatalogoPersonaleEntity> catalogoEntries = appDatabase.bookDao()
+                    .getPersonalCatalogByUserId(currentUserId);
+            
+            List<LibroPersonaleUI> libriUI = new ArrayList<>();
+            for (CatalogoPersonaleEntity entry : catalogoEntries) {
+                LibroEntity libro = appDatabase.bookDao().getBookByIsbn(entry.bookIsbn);
+                if (libro != null) {
+                    libriUI.add(new LibroPersonaleUI(
+                            libro.isbn,
+                            libro.titolo,
+                            libro.autore,
+                            libro.coverUrl,
+                            entry.readingStatus
+                    ));
+                }
+            }
+            
+            runOnUiThread(() -> renderPersonalCatalog(libriUI));
         });
     }
 
-    private void renderPersonalCatalog(List<LibroEntity> books) {
-        if (books.isEmpty()) {
+    private void renderPersonalCatalog(List<LibroPersonaleUI> libriUI) {
+        if (libriUI.isEmpty()) {
             statusText.setText(R.string.personal_catalog_empty);
             recyclerView.setVisibility(android.view.View.GONE);
             return;
@@ -66,24 +83,10 @@ public class CatalogoPersonaleActivity extends AppCompatActivity {
         statusText.setVisibility(android.view.View.GONE);
         recyclerView.setVisibility(android.view.View.VISIBLE);
 
-        List<LibroPersonaleUI> libriUI = mapToPersonalUiBooks(books);
         LibroPersonaleAdapter adapter = new LibroPersonaleAdapter(libriUI, this::updateReadingStatus);
         recyclerView.setAdapter(adapter);
     }
 
-    private List<LibroPersonaleUI> mapToPersonalUiBooks(List<LibroEntity> entities) {
-        List<LibroPersonaleUI> libriUI = new ArrayList<>();
-        for (LibroEntity entity : entities) {
-            libriUI.add(new LibroPersonaleUI(
-                entity.isbn,
-                entity.titolo,
-                entity.autore,
-                entity.coverUrl,
-                "NON_LETTO"
-            ));
-        }
-        return libriUI;
-    }
 
     private void updateReadingStatus(LibroPersonaleUI libro, String newStatus) {
         dbExecutor.execute(() -> {

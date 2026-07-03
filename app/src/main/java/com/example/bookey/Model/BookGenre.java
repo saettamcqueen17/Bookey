@@ -67,9 +67,7 @@ public enum BookGenre {
         return parent == null;
     }
 
-    /**
-     * Ottiene tutti i sottogeneri (figli diretti) di questo genere
-     */
+
     public List<BookGenre> getChildren() {
         List<BookGenre> children = new ArrayList<>();
         for (BookGenre genre : BookGenre.values()) {
@@ -80,9 +78,7 @@ public enum BookGenre {
         return children;
     }
 
-    /**
-     * Ottiene tutti i sottogeneri (figli, nipoti, ecc.) di questo genere ricorsivamente
-     */
+
     public List<BookGenre> getAllDescendants() {
         List<BookGenre> descendants = new ArrayList<>();
         for (BookGenre child : getChildren()) {
@@ -92,9 +88,7 @@ public enum BookGenre {
         return descendants;
     }
 
-    /**
-     * Ottiene tutti i generi principali (senza parent)
-     */
+
     public static List<BookGenre> getMainGenres() {
         List<BookGenre> mainGenres = new ArrayList<>();
         for (BookGenre genre : BookGenre.values()) {
@@ -105,9 +99,6 @@ public enum BookGenre {
         return mainGenres;
     }
 
-    /**
-     * Trova un genere dal nome (per compatibilità con i dati esistenti)
-     */
     public static BookGenre fromString(String genreName) {
         if (genreName == null) return null;
 
@@ -125,10 +116,7 @@ public enum BookGenre {
         }
     }
 
-    /**
-     * Ottiene tutti i nomi dei generi che dovrebbero matchare quando si filtra per questo genere
-     * (include se stesso e tutti i discendenti)
-     */
+
     public List<String> getAllMatchingGenreNames() {
         List<String> names = new ArrayList<>();
         names.add(this.name());

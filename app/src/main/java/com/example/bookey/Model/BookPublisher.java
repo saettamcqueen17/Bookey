@@ -38,9 +38,7 @@ public enum BookPublisher {
         return displayName;
     }
 
-    /**
-     * Ottiene tutte le case editrici
-     */
+
     public static List<BookPublisher> getAllPublishers() {
         List<BookPublisher> publishers = new ArrayList<>();
         for (BookPublisher publisher : BookPublisher.values()) {
@@ -49,9 +47,7 @@ public enum BookPublisher {
         return publishers;
     }
 
-    /**
-     * Trova una casa editrice dal nome (per compatibilità con i dati esistenti)
-     */
+
     public static BookPublisher fromString(String publisherName) {
         if (publisherName == null) return null;
 

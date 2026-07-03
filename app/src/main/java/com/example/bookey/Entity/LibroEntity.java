@@ -28,7 +28,6 @@ public class LibroEntity {
         this.coverUrl= coverUrl;
     }
 
-    // Getter in inglese per facilitare l'uso nel codice
     public String getTitle() { return titolo; }
     public String getAuthor() { return autore; }
     public String getPublisher() { return editore; }

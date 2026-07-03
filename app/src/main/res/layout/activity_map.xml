@@ -40,52 +40,51 @@
                 android:text="@string/location_default_message"
                 android:textStyle="bold" />
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:text="Raggio di visualizzazione:"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/radiusToggleGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:gravity="center_vertical">
+                app:singleSelection="true"
+                app:checkedButton="@id/radius10kmButton">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Raggio visualizzazione: "
-                    android:textSize="14sp" />
-
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/radiusToggleGroup"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/radius10kmButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:singleSelection="true"
-                    app:checkedButton="@id/radius10kmButton">
+                    android:text="10 km"
+                    android:textSize="12sp"
+                    app:textAllCaps="false"
+                    style="@style/Widget.Material3.Button.OutlinedButton" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/radius10kmButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="10km"
-                        style="@style/Widget.Material3.Button.OutlinedButton" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/radius100kmButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="100 km"
+                    android:textSize="12sp"
+                    app:textAllCaps="false"
+                    style="@style/Widget.Material3.Button.OutlinedButton" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/radius100kmButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="100km"
-                        style="@style/Widget.Material3.Button.OutlinedButton" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/radius1000kmButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="1000km"
-                        style="@style/Widget.Material3.Button.OutlinedButton" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
-            </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/radius1000kmButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1000 km"
+                    android:textSize="12sp"
+                    app:textAllCaps="false"
+                    style="@style/Widget.Material3.Button.OutlinedButton" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
         </LinearLayout>
 
         <org.osmdroid.views.MapView
@@ -106,6 +105,17 @@
         android:contentDescription="Condividi la tua posizione"
         app:srcCompat="@android:drawable/ic_menu_share"
         app:fabSize="normal" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/friendRequestsFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="88dp"
+        android:contentDescription="Richieste di amicizia e messaggi"
+        app:srcCompat="@android:drawable/ic_dialog_email"
+        app:fabSize="mini" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
